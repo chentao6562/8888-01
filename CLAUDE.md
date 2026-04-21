@@ -304,6 +304,56 @@
 
 ---
 
+## 9 · 仓库与部署
+
+### 9.1 GitHub 仓库（唯一上传目的地）
+
+- **Repo**：`git@github.com:chentao6562/8888-01.git`
+- **Default branch**：`main`
+- **约定**：每次代码改动完成后必须 commit + push 到 `main` · 不在本地囤积未推变更
+- **Commit style**：遵守 `commitlint.config.cjs`（Conventional Commits: feat / fix / chore / docs / refactor / test）
+- **CI**：push 自动跑 type-check + e2e；任一失败阻断后续部署
+
+### 9.2 测试服务器（阿里云 ECS）
+
+| 项 | 值 |
+|---|---|
+| 实例 ID | `i-hp3hcwa9l935us6pcfo2` |
+| 别名 | `launch-advisor-20260421` |
+| 区域 | 华北5 · 呼和浩特 A |
+| 公网 IP | `39.104.101.12` |
+| 规格 | `ecs.e-c1m1.large` · 2C 2G · 20GB ESSD |
+| OS | Alibaba Cloud Linux 3.2104 LTS 64 位 |
+| 带宽 | 1Mbps 固定 |
+| 到期 | 2026-05-21 |
+| root 密码 | `Cc65623518+` ⚠️ **仅测试环境 · 生产严禁入库** |
+
+### 9.3 自动部署工作流
+
+`push to main` → GitHub Actions（跑 type-check + e2e）→ SSH 到 ECS `/opt/mindlink` → `git pull` + `docker compose up -d --build`
+
+- Workflow 文件：[.github/workflows/deploy-test.yml](.github/workflows/deploy-test.yml)
+- Compose：[docker-compose.test.yml](docker-compose.test.yml)
+- GitHub Secrets（仓库 Settings → Secrets and variables → Actions）：
+  - `ECS_HOST` = `39.104.101.12`
+  - `ECS_USER` = `root`
+  - `ECS_PASSWORD` = `Cc65623518+`
+- 首次部署：SSH 登录 ECS 执行 [scripts/ecs-bootstrap.sh](scripts/ecs-bootstrap.sh) 一键装 docker + 克隆仓库 + 随机生成 .env + 首次 compose up
+
+### 9.4 访问入口（测试期）
+
+- API：`http://39.104.101.12:3000/api/v1/health`
+- Admin Web：`http://39.104.101.12`
+- Swagger：`http://39.104.101.12:3000/api/docs`
+
+### 9.5 安全提醒
+
+- 测试服务器密码明文入库仅限于**本台临时测试机** · 生产任何服务器凭据必须用 GitHub Secrets / K8s Secret / 云密管 · 严禁 commit 到仓库
+- 测试期不开 HTTPS + 1Mbps 带宽 · **不能承载真实客户数据**；beta 客户上线前必须切到生产环境（ACK 或 RDS+ECS 中档方案）
+- 测试服务器 2026-05-21 到期 · 到期后废弃 · 生产部署必须换 deploy key 或云密管
+
+---
+
 ## 使用本文件的约定
 
 - 新会话开始时，Claude 先读本文件，再读 `prd_text.txt` 相关章节补充细节

@@ -1,8 +1,9 @@
-name: Deploy Staging
+name: Deploy Staging (K8s · ACK)
 
+# 已暂停：测试阶段用 deploy-test.yml 走 ECS
+# 上 ACK 时把下面 workflow_dispatch 换回 push:branches:[main] 即可恢复
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: staging
