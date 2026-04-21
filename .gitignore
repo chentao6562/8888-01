@@ -50,8 +50,9 @@ prd_text.txt
 *.sqlite
 *.sqlite-journal
 
-# Local uploads
-uploads/
+# Local uploads (运行时上传目录 · 锚定根避免误杀 src/modules/uploads/)
+/uploads/
+apps/*/uploads/
 
 # Archives
 files.zip
