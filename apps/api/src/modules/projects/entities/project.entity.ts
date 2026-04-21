@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -35,10 +36,10 @@ export class ProjectEntity {
   @Column({ type: 'varchar', length: 20, default: 'kickoff' })
   status!: ProjectStatus;
 
-  @Column({ name: 'start_at', type: 'datetime', nullable: true })
+  @Column({ name: 'start_at', type: DATETIME, nullable: true })
   startAt!: Date | null;
 
-  @Column({ name: 'end_at', type: 'datetime', nullable: true })
+  @Column({ name: 'end_at', type: DATETIME, nullable: true })
   endAt!: Date | null;
 
   @Column({ name: 'pm_id', type: 'varchar', length: 36, nullable: true })

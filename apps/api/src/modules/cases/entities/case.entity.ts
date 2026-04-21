@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -47,7 +48,7 @@ export class CaseEntity {
   @Column({ name: 'call_count', type: 'int', default: 0 })
   callCount!: number;
 
-  @Column({ name: 'last_called_at', type: 'datetime', nullable: true })
+  @Column({ name: 'last_called_at', type: DATETIME, nullable: true })
   lastCalledAt!: Date | null;
 
   @Column({ type: 'varchar', length: 10, default: 'fresh' })

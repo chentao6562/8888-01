@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -44,13 +45,13 @@ export class StaffEntity {
   @Column({ name: 'invite_token', type: 'varchar', length: 120, nullable: true })
   inviteToken!: string | null;
 
-  @Column({ name: 'invite_expires_at', type: 'datetime', nullable: true })
+  @Column({ name: 'invite_expires_at', type: DATETIME, nullable: true })
   inviteExpiresAt!: Date | null;
 
   @Column({ name: 'invited_by', type: 'varchar', length: 36, nullable: true })
   invitedBy!: string | null;
 
-  @Column({ name: 'joined_at', type: 'datetime', nullable: true })
+  @Column({ name: 'joined_at', type: DATETIME, nullable: true })
   joinedAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })

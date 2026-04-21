@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -34,7 +35,7 @@ export class ChurnRecordEntity {
   @Column({ name: 'improvement_suggestion', type: 'text', nullable: true })
   improvementSuggestion!: string | null;
 
-  @Column({ name: 'churned_at', type: 'datetime' })
+  @Column({ name: 'churned_at', type: DATETIME })
   churnedAt!: Date;
 
   @Column({ name: 'created_by', type: 'varchar', length: 36, nullable: true })

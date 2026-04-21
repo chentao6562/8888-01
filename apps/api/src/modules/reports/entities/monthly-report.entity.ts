@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -56,10 +57,10 @@ export class MonthlyReportEntity {
   @Column({ name: 'h5_url', type: 'varchar', length: 500, nullable: true })
   h5Url!: string | null;
 
-  @Column({ name: 'pushed_at', type: 'datetime', nullable: true })
+  @Column({ name: 'pushed_at', type: DATETIME, nullable: true })
   pushedAt!: Date | null;
 
-  @Column({ name: 'read_at', type: 'datetime', nullable: true })
+  @Column({ name: 'read_at', type: DATETIME, nullable: true })
   readAt!: Date | null;
 
   @Column({ name: 'drafted_by', type: 'varchar', length: 36, nullable: true })

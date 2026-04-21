@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -35,7 +36,7 @@ export class ComplaintEntity {
   @Column({ name: 'handled_by', type: 'varchar', length: 36, nullable: true })
   handledBy!: string | null;
 
-  @Column({ name: 'handled_at', type: 'datetime', nullable: true })
+  @Column({ name: 'handled_at', type: DATETIME, nullable: true })
   handledAt!: Date | null;
 
   @Column({ name: 'resolution', type: 'text', nullable: true })

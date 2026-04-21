@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -37,7 +38,7 @@ export class RenewalRecordEntity {
   @Column({ name: 'discount_ratio', type: 'float', nullable: true })
   discountRatio!: number | null;
 
-  @Column({ name: 'expires_at', type: 'datetime' })
+  @Column({ name: 'expires_at', type: DATETIME })
   expiresAt!: Date;
 
   @Column({ name: 'lost_reason', type: 'varchar', length: 40, nullable: true })

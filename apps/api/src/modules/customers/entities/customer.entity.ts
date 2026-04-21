@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -85,13 +86,13 @@ export class CustomerEntity {
   strategistId!: string | null;
 
   // --- 时间 ---
-  @Column({ name: 'last_contact_at', type: 'datetime', nullable: true })
+  @Column({ name: 'last_contact_at', type: DATETIME, nullable: true })
   lastContactAt!: Date | null;
 
-  @Column({ name: 'contract_expires_at', type: 'datetime', nullable: true })
+  @Column({ name: 'contract_expires_at', type: DATETIME, nullable: true })
   contractExpiresAt!: Date | null;
 
-  @Column({ name: 'churned_at', type: 'datetime', nullable: true })
+  @Column({ name: 'churned_at', type: DATETIME, nullable: true })
   churnedAt!: Date | null;
 
   @Column({ name: 'created_by', type: 'varchar', length: 36, nullable: true })

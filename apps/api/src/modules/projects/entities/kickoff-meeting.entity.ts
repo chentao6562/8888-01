@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -21,7 +22,7 @@ export class KickoffMeetingEntity {
   @Column({ name: 'project_id', type: 'varchar', length: 36 })
   projectId!: string;
 
-  @Column({ name: 'meeting_at', type: 'datetime', nullable: true })
+  @Column({ name: 'meeting_at', type: DATETIME, nullable: true })
   meetingAt!: Date | null;
 
   /** 5 节议程：目标 / 分工 / 排期 / 风险 / 沟通机制。 */

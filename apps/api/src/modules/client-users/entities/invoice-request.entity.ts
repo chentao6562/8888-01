@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -43,7 +44,7 @@ export class InvoiceRequestEntity {
   @Column({ type: 'varchar', length: 20, default: 'pending' })
   status!: InvoiceStatus;
 
-  @Column({ name: 'issued_at', type: 'datetime', nullable: true })
+  @Column({ name: 'issued_at', type: DATETIME, nullable: true })
   issuedAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })

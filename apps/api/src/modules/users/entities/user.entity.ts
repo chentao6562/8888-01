@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -34,10 +35,10 @@ export class UserEntity {
   @Column({ name: 'failed_attempts', type: 'int', default: 0 })
   failedAttempts!: number;
 
-  @Column({ name: 'locked_until', type: 'datetime', nullable: true })
+  @Column({ name: 'locked_until', type: DATETIME, nullable: true })
   lockedUntil!: Date | null;
 
-  @Column({ name: 'last_login_at', type: 'datetime', nullable: true })
+  @Column({ name: 'last_login_at', type: DATETIME, nullable: true })
   lastLoginAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })

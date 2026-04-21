@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -30,7 +31,7 @@ export class CustomerUserEntity {
   @Column({ type: 'varchar', length: 20 })
   phone!: string;
 
-  @Column({ name: 'last_login_at', type: 'datetime', nullable: true })
+  @Column({ name: 'last_login_at', type: DATETIME, nullable: true })
   lastLoginAt!: Date | null;
 
   @Column({ name: 'login_count', type: 'int', default: 0 })

@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -55,7 +56,7 @@ export class PositioningBookEntity {
   @Column({ type: 'varchar', length: 20, default: 'draft' })
   status!: 'draft' | 'final' | 'signed';
 
-  @Column({ name: 'signed_at', type: 'datetime', nullable: true })
+  @Column({ name: 'signed_at', type: DATETIME, nullable: true })
   signedAt!: Date | null;
 
   @Column({ name: 'pdf_url', type: 'varchar', length: 500, nullable: true })

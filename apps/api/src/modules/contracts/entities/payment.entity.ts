@@ -1,3 +1,4 @@
+import { DATETIME } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -36,13 +37,13 @@ export class PaymentEntity {
   @Column({ type: 'int' })
   amount!: number;
 
-  @Column({ name: 'due_at', type: 'datetime', nullable: true })
+  @Column({ name: 'due_at', type: DATETIME, nullable: true })
   dueAt!: Date | null;
 
   @Column({ type: 'varchar', length: 20, default: 'pending' })
   status!: PaymentStatus;
 
-  @Column({ name: 'paid_at', type: 'datetime', nullable: true })
+  @Column({ name: 'paid_at', type: DATETIME, nullable: true })
   paidAt!: Date | null;
 
   @Column({ name: 'voucher_url', type: 'varchar', length: 500, nullable: true })
