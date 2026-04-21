@@ -4,8 +4,10 @@
 # ========== Stage 1: build ==========
 FROM node:20.11-alpine AS builder
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+RUN sed -i 's|dl-cdn.alpinelinux.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apk/repositories \
+ && corepack enable && corepack prepare pnpm@9.15.0 --activate \
+ && pnpm config set registry https://registry.npmmirror.com
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
 COPY apps/admin-web/package.json apps/admin-web/
 COPY packages/ui/package.json packages/ui/
 COPY packages/shared/package.json packages/shared/

@@ -4,10 +4,13 @@
 # ========== Stage 1: deps ==========
 FROM node:20.11-alpine AS deps
 WORKDIR /app
-RUN apk add --no-cache python3 make g++ \
+# Alpine + pnpm 换国内镜像（CN build 加速）
+RUN sed -i 's|dl-cdn.alpinelinux.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apk/repositories \
+ && apk add --no-cache python3 make g++ \
  && corepack enable \
- && corepack prepare pnpm@9.15.0 --activate
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+ && corepack prepare pnpm@9.15.0 --activate \
+ && pnpm config set registry https://registry.npmmirror.com
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
 COPY apps/api/package.json apps/api/
 COPY packages/shared/package.json packages/shared/
 COPY packages/config/package.json packages/config/
@@ -26,14 +29,16 @@ WORKDIR /app
 ENV NODE_ENV=production \
     API_PORT=3000
 
-RUN apk add --no-cache tini curl \
+RUN sed -i 's|dl-cdn.alpinelinux.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apk/repositories \
+ && apk add --no-cache tini curl \
  && corepack enable \
  && corepack prepare pnpm@9.15.0 --activate \
+ && pnpm config set registry https://registry.npmmirror.com \
  && addgroup -g 1001 -S nodejs \
  && adduser -S mindlink -u 1001 -G nodejs
 
 # 仅拷生产依赖
-COPY --from=builder --chown=mindlink:nodejs /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/package.json ./
+COPY --from=builder --chown=mindlink:nodejs /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/package.json /app/.npmrc ./
 COPY --from=builder --chown=mindlink:nodejs /app/apps/api/package.json ./apps/api/
 COPY --from=builder --chown=mindlink:nodejs /app/packages ./packages
 RUN pnpm install --frozen-lockfile --filter @mindlink/api... --prod \
