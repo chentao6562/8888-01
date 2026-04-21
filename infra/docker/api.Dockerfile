@@ -48,6 +48,9 @@ RUN pnpm install --frozen-lockfile --filter @mindlink/api... --prod \
 
 COPY --from=builder --chown=mindlink:nodejs /app/apps/api/dist ./apps/api/dist
 
+# 预建 uploads 目录（runtime 写入 · 生产改用 OSS/COS）
+RUN mkdir -p /app/uploads && chown -R mindlink:nodejs /app/uploads
+
 USER mindlink
 EXPOSE 3000
 
