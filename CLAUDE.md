@@ -328,17 +328,41 @@
 | 到期 | 2026-05-21 |
 | root 密码 | `Cc65623518+` ⚠️ **仅测试环境 · 生产严禁入库** |
 
-### 9.3 自动部署工作流
+### 9.3 自动部署工作流（Pull 模式 · 服务器主动拉）
 
-`push to main` → GitHub Actions（跑 type-check + e2e）→ SSH 到 ECS `/opt/mindlink` → `git pull` + `docker compose up -d --build`
+```
+本地 push main
+   ↓
+GitHub（代码托管 + CI 质量门）
+   ↓ ↑
+GitHub Actions: ci.yml             ECS systemd timer: 每 2 分钟 git fetch
+   跑 type-check + e2e + build       发现新 commit → reset --hard → docker compose up
+```
 
-- Workflow 文件：[.github/workflows/deploy-test.yml](.github/workflows/deploy-test.yml)
+**核心原则**：服务器每 2 分钟主动 `git fetch`，对比 HEAD，有新 commit 就自动 `git reset --hard origin/main` + `docker compose up -d --build`。不需要 GitHub 保存 SSH 密码。
+
+**组件**：
+- 轮询脚本：[scripts/auto-pull.sh](scripts/auto-pull.sh) · flock 锁防并发 · 无新 commit 时静默退出
+- systemd service：[infra/systemd/mindlink-deploy.service](infra/systemd/mindlink-deploy.service)（one-shot）
+- systemd timer：[infra/systemd/mindlink-deploy.timer](infra/systemd/mindlink-deploy.timer)（`OnBootSec=30s` + `OnUnitActiveSec=2min`）
 - Compose：[docker-compose.test.yml](docker-compose.test.yml)
-- GitHub Secrets（仓库 Settings → Secrets and variables → Actions）：
-  - `ECS_HOST` = `39.104.101.12`
-  - `ECS_USER` = `root`
-  - `ECS_PASSWORD` = `Cc65623518+`
-- 首次部署：SSH 登录 ECS 执行 [scripts/ecs-bootstrap.sh](scripts/ecs-bootstrap.sh) 一键装 docker + 克隆仓库 + 随机生成 .env + 首次 compose up
+- CI 质量门：[.github/workflows/ci.yml](.github/workflows/ci.yml) · 跑失败**不阻止**服务器拉代码（未来可加 commit status gate）
+
+**首次部署（ECS 一次）**：
+```bash
+ssh root@39.104.101.12   # 密码 Cc65623518+
+cd /opt && git clone https://github.com/chentao6562/8888-01.git mindlink
+bash /opt/mindlink/scripts/ecs-bootstrap.sh
+```
+脚本自动：装 docker + 阿里云镜像加速 · 克隆仓库 · 随机生成 .env（JWT/加密 key 等）· 首次 `compose up -d --build` · 装 systemd timer 并启用。
+
+**日常运维命令（ECS 上）**：
+```bash
+tail -f /var/log/mindlink-deploy.log          # 看部署历史
+systemctl status mindlink-deploy.timer        # 看 timer 是否在跑
+systemctl start mindlink-deploy.service       # 立即触发一次拉取（不等 2 分钟）
+journalctl -u mindlink-deploy.service -n 50   # 看最近的 service 输出
+```
 
 ### 9.4 访问入口（测试期）
 

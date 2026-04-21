@@ -126,9 +126,20 @@ else
   echo "    ✓ .env 已存在，跳过"
 fi
 
-# --- 7/7 启动容器 ---
-echo "==> 7/7 docker compose up -d --build"
+# --- 7/8 启动容器 ---
+echo "==> 7/8 docker compose up -d --build"
 docker compose -f "$COMPOSE_FILE" up -d --build
+
+# --- 8/8 安装 systemd auto-pull timer（每 2 分钟轮询 GitHub） ---
+echo "==> 8/8 安装 systemd auto-pull timer"
+install -m 644 "$DEPLOY_DIR/infra/systemd/mindlink-deploy.service" /etc/systemd/system/mindlink-deploy.service
+install -m 644 "$DEPLOY_DIR/infra/systemd/mindlink-deploy.timer"   /etc/systemd/system/mindlink-deploy.timer
+chmod +x "$DEPLOY_DIR/scripts/auto-pull.sh"
+touch /var/log/mindlink-deploy.log
+systemctl daemon-reload
+systemctl enable --now mindlink-deploy.timer
+echo "    ✓ timer 已启用 · 状态：$(systemctl is-active mindlink-deploy.timer)"
+echo "    ✓ 每 2 分钟自动检查 GitHub main 分支 · 有新 commit 就自动 pull + rebuild"
 
 echo ""
 echo "==> 等待 API 健康检查（最多 60s）"
@@ -160,9 +171,12 @@ echo "  API:     http://$PUBLIC_IP:3000/api/v1/health"
 echo "  Web:     http://$PUBLIC_IP/"
 echo "  Swagger: http://$PUBLIC_IP:3000/api/docs"
 echo ""
-echo "  下一步："
-echo "  1. 回 GitHub Settings → Secrets 添加：ECS_HOST / ECS_USER / ECS_PASSWORD"
-echo "  2. 本地 push 任意改动到 main，GitHub Actions 会自动部署到这台 ECS"
+echo "  以后：本地 push 到 main → 服务器每 2 分钟自动拉 → 有新 commit 就自动 rebuild"
+echo ""
+echo "  查看部署日志：   tail -f /var/log/mindlink-deploy.log"
+echo "  查看 timer 状态：systemctl status mindlink-deploy.timer"
+echo "  手动触发一次拉取：systemctl start mindlink-deploy.service"
+echo "  查看最近 service：journalctl -u mindlink-deploy.service -n 50"
 echo ""
 echo "  首次 seed 数据（可选）："
 echo "  docker compose -f $COMPOSE_FILE exec api node apps/api/dist/seeds/phase-1.js"

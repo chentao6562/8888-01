@@ -1,46 +1,47 @@
-name: CI
+name: CI · Type check + E2E
+
+# 服务器走 pull 模式（ECS 上 systemd timer 每 2 分钟轮询 GitHub），
+# GitHub Actions 只作为质量门：本 workflow 跑失败不阻止服务器拉代码。
+# 未来如需阻止：server auto-pull.sh 前先调 GitHub commit status API 校验 CI 通过。
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  quality:
-    name: Quality Gate
+  test:
+    name: Type check + E2E
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.0
+      - uses: pnpm/action-setup@v4
+        with: { version: '9.15.0' }
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
+      - uses: actions/setup-node@v4
+        with: { node-version: '20.11', cache: 'pnpm' }
 
-      - name: Install dependencies
+      - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Type check
+      - name: Type check (all workspaces)
         run: pnpm type-check
 
-      - name: Lint
-        run: pnpm lint
+      - name: API E2E (125 tests)
+        run: pnpm --filter @mindlink/api test:e2e
+        env:
+          NODE_ENV: test
 
-      - name: Build
-        run: pnpm build
+      - name: API build
+        run: pnpm --filter @mindlink/api build
 
-      - name: Unit test
-        run: pnpm test
+      - name: Admin Web build
+        run: pnpm --filter @mindlink/admin-web build

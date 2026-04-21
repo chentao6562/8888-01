@@ -1,0 +1,16 @@
+[Unit]
+Description=MindLink auto-pull from GitHub and redeploy
+Documentation=https://github.com/chentao6562/8888-01
+After=docker.service network-online.target
+Wants=docker.service network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/mindlink/scripts/auto-pull.sh
+# 单次执行超时 10 分钟（2G RAM 下 docker build 可能慢）
+TimeoutStartSec=600
+# 失败不 restart · 下次 timer 再试
+Restart=no
+# 捕获 stdout/stderr 到 journal
+StandardOutput=journal
+StandardError=journal

@@ -1,0 +1,15 @@
+[Unit]
+Description=Poll GitHub for MindLink updates every 2 minutes
+Documentation=https://github.com/chentao6562/8888-01
+
+[Timer]
+# 系统启动 30s 后第一次跑
+OnBootSec=30s
+# 之后每 2 分钟跑一次（从上次执行结束算起）
+OnUnitActiveSec=2min
+# 如果错过了时间（比如机器刚开机），立刻补跑一次
+Persistent=true
+Unit=mindlink-deploy.service
+
+[Install]
+WantedBy=timers.target
