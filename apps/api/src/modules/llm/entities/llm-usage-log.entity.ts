@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { TINYINT, FLOAT } from '@/common/db/column-types';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('llm_usage_logs')
 @Index(['tenantId', 'createdAt'])
@@ -33,7 +28,7 @@ export class LlmUsageLogEntity {
   @Column({ name: 'latency_ms', type: 'int', default: 0 })
   latencyMs!: number;
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: TINYINT, default: 1 })
   success!: number;
 
   @Column({ name: 'error_code', type: 'varchar', length: 60, nullable: true })

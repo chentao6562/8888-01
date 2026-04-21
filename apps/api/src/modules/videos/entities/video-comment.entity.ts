@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { TINYINT, FLOAT } from '@/common/db/column-types';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 /** 客户端成片审核时对视频时间轴的打点批注。 */
 @Entity('video_comments')
@@ -25,7 +20,7 @@ export class VideoCommentEntity {
   @Column({ type: 'varchar', length: 60 })
   author!: string;
 
-  @Column({ type: 'float', default: 0 })
+  @Column({ type: FLOAT, default: 0 })
   timestamp!: number; // 视频秒数
 
   @Column({ type: 'text' })

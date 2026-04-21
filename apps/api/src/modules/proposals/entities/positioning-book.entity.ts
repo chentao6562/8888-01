@@ -1,4 +1,4 @@
-import { DATETIME } from '@/common/db/column-types';
+import { DATETIME, TINYINT, FLOAT } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -47,7 +47,7 @@ export class PositioningBookEntity {
   @Column({ name: 'price_quote', type: 'int', default: 0 })
   priceQuote!: number;
 
-  @Column({ name: 'region_factor', type: 'float', default: 1.0 })
+  @Column({ name: 'region_factor', type: FLOAT, default: 1.0 })
   regionFactor!: number;
 
   @Column({ name: 'custom_items', type: 'text', nullable: true })

@@ -12,3 +12,5 @@ export const IS_POSTGRES =
   (!process.env.DB_DRIVER && process.env.NODE_ENV === 'production');
 
 export const DATETIME: 'timestamp' | 'datetime' = IS_POSTGRES ? 'timestamp' : 'datetime';
+export const TINYINT: 'smallint' | 'tinyint' = IS_POSTGRES ? 'smallint' : 'tinyint';
+export const FLOAT: 'real' | 'float' = IS_POSTGRES ? 'real' : 'float';

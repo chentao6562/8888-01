@@ -1,4 +1,4 @@
-import { DATETIME } from '@/common/db/column-types';
+import { DATETIME, TINYINT, FLOAT } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -35,7 +35,7 @@ export class RenewalRecordEntity {
   @Column({ name: 'proposal', type: 'text', nullable: true })
   proposal!: string | null;
 
-  @Column({ name: 'discount_ratio', type: 'float', nullable: true })
+  @Column({ name: 'discount_ratio', type: FLOAT, nullable: true })
   discountRatio!: number | null;
 
   @Column({ name: 'expires_at', type: DATETIME })

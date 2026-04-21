@@ -1,3 +1,4 @@
+import { TINYINT, FLOAT } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -51,13 +52,13 @@ export class VideoMetricEntity {
   @Column({ name: 'ad_spend', type: 'int', default: 0 })
   adSpend!: number; // 分
 
-  @Column({ type: 'float', default: 0 })
+  @Column({ type: FLOAT, default: 0 })
   roi!: number;
 
   @Column({ name: 'entered_by', type: 'varchar', length: 36, nullable: true })
   enteredBy!: string | null;
 
-  @Column({ name: 'anomaly_flag', type: 'tinyint', default: 0 })
+  @Column({ name: 'anomaly_flag', type: TINYINT, default: 0 })
   anomalyFlag!: number;
 
   @CreateDateColumn({ name: 'created_at' })

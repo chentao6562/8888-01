@@ -1,4 +1,4 @@
-import { DATETIME } from '@/common/db/column-types';
+import { DATETIME, TINYINT, FLOAT } from '@/common/db/column-types';
 import {
   Column,
   CreateDateColumn,
@@ -31,7 +31,7 @@ export class PaymentEntity {
   @Column({ type: 'varchar', length: 20 })
   stage!: PaymentStage;
 
-  @Column({ type: 'float' })
+  @Column({ type: FLOAT })
   ratio!: number;
 
   @Column({ type: 'int' })
