@@ -42,9 +42,7 @@ COPY --from=builder --chown=mindlink:nodejs /app/pnpm-lock.yaml /app/pnpm-worksp
 COPY --from=builder --chown=mindlink:nodejs /app/apps/api/package.json ./apps/api/
 COPY --from=builder --chown=mindlink:nodejs /app/packages ./packages
 # 删 root package.json 的 prepare: husky（husky 是 devDep · prod 装不到）
-USER root
 RUN node -e "const p=require('./package.json');if(p.scripts) delete p.scripts.prepare;require('fs').writeFileSync('./package.json',JSON.stringify(p,null,2))"
-USER mindlink
 RUN pnpm install --frozen-lockfile --filter @mindlink/api... --prod \
  && pnpm store prune
 
