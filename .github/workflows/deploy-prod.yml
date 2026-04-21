@@ -1,0 +1,49 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '镜像 tag（建议 staging-<sha>，先在 staging 跑过）'
+        required: true
+        type: string
+      confirm:
+        description: '输入 "I-KNOW-THIS-IS-PROD" 以确认'
+        required: true
+        type: string
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: ${{ github.event.inputs.confirm == 'I-KNOW-THIS-IS-PROD' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    env:
+      REGISTRY: ${{ secrets.CR_REGISTRY }}
+      KUBECONFIG: /tmp/kubeconfig
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.CR_USER }}
+          password: ${{ secrets.CR_PASSWORD }}
+
+      - name: Verify image exists
+        run: docker manifest inspect "$REGISTRY/mindlink/api:${{ github.event.inputs.tag }}"
+
+      - name: Setup kubeconfig
+        run: |
+          echo "${{ secrets.PROD_KUBECONFIG }}" | base64 -d > "$KUBECONFIG"
+          chmod 600 "$KUBECONFIG"
+
+      - name: Deploy
+        run: |
+          # 在 CI 中不需要交互式 confirm；直接 yes
+          yes yes | bash infra/scripts/deploy-prod.sh "${{ github.event.inputs.tag }}"

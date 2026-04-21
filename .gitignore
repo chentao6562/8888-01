@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Build output
+dist/
+build/
+.output/
+.nuxt/
+unpackage/
+.turbo/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs/
+*.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Misc
+*.tsbuildinfo
+.cache/
+prototype_extract/
+prd_text.txt
+
+# Local databases
+*.sqlite
+*.sqlite-journal
+
+# Local uploads
+uploads/
+
+# Archives
+files.zip
+*.zip
+
+# Reports artifacts
+/tmp/walkthrough-*.log
+docs/reports/walkthrough-report.md

@@ -1,0 +1,54 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    env:
+      REGISTRY: ${{ secrets.CR_REGISTRY }}
+      KUBECONFIG: /tmp/kubeconfig
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with: { version: '9.15.0' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20.11', cache: 'pnpm' }
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Run e2e
+        run: pnpm --filter @mindlink/api test:e2e
+        env:
+          NODE_ENV: test
+
+      - name: Login container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.CR_USER }}
+          password: ${{ secrets.CR_PASSWORD }}
+
+      - name: Setup kubeconfig
+        run: |
+          echo "${{ secrets.STAGING_KUBECONFIG }}" | base64 -d > "$KUBECONFIG"
+          chmod 600 "$KUBECONFIG"
+
+      - name: Deploy
+        run: |
+          TAG=staging-$(git rev-parse --short HEAD)
+          bash infra/scripts/deploy-staging.sh "$TAG"

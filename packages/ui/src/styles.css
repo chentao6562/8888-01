@@ -1,0 +1,22 @@
+/* 组件库基础样式。由 app 的入口 css 通过 `@import '@mindlink/ui/styles.css'` 引入。 */
+
+:root {
+  --dark-bg: #0F1B3C;
+  --dark-bg-2: #1A2749;
+  --dark-bg-3: #263459;
+  --light-bg: #FFFFFF;
+  --card-bg: #F8FAFC;
+  --card-border: #E2E8F0;
+  --navy: #1E2761;
+  --cyan: #38BDF8;
+  --teal: #0EA5E9;
+  --text-dark: #0F1B3C;
+  --text-body: #334155;
+  --text-muted: #64748B;
+  --text-light: #CBD5E1;
+  --red: #EF4444;
+  --green: #10B981;
+  --amber: #F59E0B;
+  --purple: #8B5CF6;
+  --pink: #EC4899;
+}

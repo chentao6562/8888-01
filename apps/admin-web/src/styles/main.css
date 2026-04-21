@@ -1,0 +1,19 @@
+@import '@mindlink/ui/styles.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color: var(--text-body);
+  background: var(--light-bg);
+  -webkit-font-smoothing: antialiased;
+}

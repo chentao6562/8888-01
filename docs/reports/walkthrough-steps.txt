@@ -1,0 +1,137 @@
+✓ API build
+✓ seed:phase-1
+✓ seed:phase-2
+✓ seed:phase-3
+✓ seed:phase-4
+✓ seed:phase-5
+✓ seed:phase-6
+✓ API health check (HTTP 200)
+✓ A.1 注册租户 A (HTTP 201)
+✓ A.1b token_A 已获取
+✓ A.2 注册租户 B (HTTP 201)
+✓ A.3 /auth/me (HTTP 200)
+✓ A.3b me.tenant.plan = pro
+✓ A.4 邀请策划 (HTTP 201)
+✓ A.4b inviteToken 长度 = 48
+✓ A.5 accept-invite (HTTP 200)
+✓ A.5b 新 token.role = strategist
+✓ A.6 策划邀请 → 403 (HTTP 403)
+✓ A.7 invite token 重用被拒 (HTTP 404)
+✓ A.8 连续错密后锁账号 (HTTP 403 · ACCOUNT_LOCKED)
+✓ B.1 新建客户 (HTTP 201)
+✓ B.1b 新客户 stage=lead
+✓ B.2 stage-counts (HTTP 200)
+✓ B.2b lead 数量 ≥ 1 (实际 1)
+✓ B.3 非法跳转 lead→signed (HTTP 409)
+✓ B.3b 错误码
+✓ B.4 转诊断 (HTTP 200)
+✓ B.4b stage=diagnosing
+✓ B.5 开启诊断 (HTTP 201)
+✓ B.6 填 4 刀 + 4 卡 (HTTP 200)
+✓ B.7 AI 生成诊断报告 (HTTP 200)
+✓ B.7b 报告文本长度 = 522
+✓ B.8 完成诊断 (HTTP 200)
+✓ B.8b 诊断 status=completed
+✓ B.9 客户 stage=proposing
+✓ B.10 完成后锁定 → 403 (HTTP 403)
+✓ C.1 package-recommendation (HTTP 200)
+✓ C.1b 推荐套餐 tier = monthly_package
+✓ C.2 calculate-quote (HTTP 200)
+✓ C.2b 报价 = ¥24,750
+✓ C.3 创建方案 v1 (HTTP 201)
+✓ C.3b 方案文本已生成 (458)
+✓ C.4 编辑方案 (HTTP 200)
+✓ C.4b 报价已更新 ¥25,000
+✓ C.5 finalize (HTTP 200)
+✓ C.5b 方案 status=final
+✓ C.6 sign (HTTP 200)
+✓ C.6b 方案 status=signed
+✓ C.7 客户 stage=signed（S4 就绪）
+✓ C.8 已签方案不可编辑 → 409 (HTTP 409)
+✓ D.1 B 查 A 客户 → 404 (HTTP 404)
+✓ D.2 B 列表不含 A 客户
+✓ D.3 记录跟进 (HTTP 201)
+✓ D.4 跟进记录 = 1 条
+✓ D.5 tenant.plan=pro
+✓ D.5b tenant.maxStaff=20
+✓ F.1 创建合同 (HTTP 201)
+✓ F.1b 自动生成 4 笔付款
+✓ F.2 发起电子签 (HTTP 200)
+✓ F.2b 合同 status=pending_sign
+✓ F.3 电子签回调 mock (HTTP 200)
+✓ F.3b 合同 status=signed
+✓ F.4 登记首付 (HTTP 200)
+✓ F.4b 付款 status=paid
+✓ F.5 幂等重放 (HTTP 200)
+✓ F.6 已签合同编辑 → 409 (HTTP 409)
+✓ G.1 创建项目 (HTTP 201)
+✓ G.1b 项目 status=kickoff
+✓ G.2 创建启动会 (HTTP 201)
+✓ G.3 定稿启动会 (HTTP 200)
+✓ G.3b 启动会 finalized
+✓ G.3c 派发任务 1 条
+✓ G.4 项目 status=running
+✓ G.5 客户 stage=delivering
+✓ G.6 我的任务 = 1 条
+✓ G.7 创建视频 (HTTP 201)
+✓ G.7b planning→published 非法 (HTTP 409)
+✓ G.8 video→shooting (HTTP 200)
+✓ G.8 video→editing (HTTP 200)
+✓ G.8 video→pending_review (HTTP 200)
+✓ H.1 AI 文案 (HTTP 200)
+✓ H.1b 钩子长度 = 69
+✓ H.1c provider=mock
+✓ H.2 AI 标题 (HTTP 200)
+✓ H.2b 候选 5 条
+✓ H.3 AI 标签 (HTTP 200)
+✓ H.3b 标签 12 条
+✓ H.4 方言适配 (HTTP 200)
+✓ H.5 敏感词拦截 → 422 (HTTP 422)
+✓ H.5b error.code
+✓ H.6 干净文本通过
+✓ H.7 usage 端点 (HTTP 200)
+✓ H.7b 本次穿行已记 6 次调用
+✓ H.8 案例库列表 (HTTP 200)
+✓ H.8b 至少 5 条案例（实际 5）
+✓ H.9 callCount 27 → 28
+✓ H.10 手动入库 (HTTP 201)
+✓ I.1 metrics 录入 (HTTP 200)
+✓ I.1b plays=15000
+✓ I.2 upsert 覆盖
+✓ I.3 月度聚合 (HTTP 200)
+✓ I.3b 总播放 20000
+✓ I.4 AI 生成月报 (HTTP 200)
+✓ I.4b 月报 status=drafting
+✓ I.5 推送后 status=sent
+✓ I.6 已推送 → 409 (HTTP 409)
+✓ I.7 NPS 提交 (HTTP 201)
+✓ I.8 NPS 重复 → 409 (HTTP 409)
+✓ I.9 投诉创建 (HTTP 201)
+✓ I.10 投诉 closed
+✓ I.11 健康度 (HTTP 200)
+✓ I.11b 总分 76 (yellow)
+✓ I.12 公司层分析 (HTTP 200)
+✓ I.12b 客户总数 = 1
+✓ I.13 客户层分析 (HTTP 200)
+✓ I.13b trend 长度 = 6
+✓ J.0 登录 seed 租户 admin
+✓ J.1 本月目标录入 (201)
+✓ J.2 目标 newCustomers=8
+✓ J.3 续约扫描 (HTTP 200)
+✓ J.3b 续约看板 1 条（含 phase-6 种子）
+✓ J.4 AI 续约提案 (HTTP 200)
+✓ J.4b stage=negotiating
+✓ J.5 标续约成功 (HTTP 200)
+✓ J.5b stage=won
+✓ J.6 驾驶舱 (HTTP 200)
+✓ J.6b 今日决策 = 0 条
+✓ J.7 /customer-lights (HTTP 200)
+✓ J.7 /team-capacity (HTTP 200)
+✓ J.7 /monthly-kpi (HTTP 200)
+✓ J.7 /cashflow (HTTP 200)
+✓ J.7 /daily-decisions (HTTP 200)
+✓ J.8 流失月度分析 (HTTP 200)
+✓ J.9 (跳过 · RBAC 在 phase-1 e2e 已覆盖)
+✓ E.1 admin-web dev 启动
+✓ E.2 首页 HTML 含 app 根 + MindLink 标题
+✓ E.3 /login 可达 (HTTP 200)

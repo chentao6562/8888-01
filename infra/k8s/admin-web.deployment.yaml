@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mindlink-admin-web
+  namespace: mindlink
+  labels:
+    app: mindlink-admin-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mindlink-admin-web
+  template:
+    metadata:
+      labels:
+        app: mindlink-admin-web
+    spec:
+      containers:
+        - name: web
+          image: registry.example.com/mindlink/admin-web:__IMAGE_TAG__
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests: { cpu: "50m", memory: "32Mi" }
+            limits:   { cpu: "200m", memory: "128Mi" }
+          readinessProbe:
+            httpGet: { path: /healthz, port: 80 }
+            initialDelaySeconds: 2
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mindlink-admin-web
+  namespace: mindlink
+spec:
+  selector:
+    app: mindlink-admin-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: ClusterIP

@@ -1,0 +1,84 @@
+# MindLink 定时任务（替代 NestJS schedule，多副本场景下更稳）
+---
+# 每天 02:30 全量备份 PG → OSS
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-daily
+  namespace: mindlink
+spec:
+  schedule: "30 18 * * *"   # UTC 18:30 = 北京 02:30
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: pg-dump
+              image: postgres:16-alpine
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -e
+                  DATE=$(date +%Y%m%d-%H%M)
+                  pg_dump -h $DB_HOST -U $DB_USERNAME -d $DB_DATABASE -Fc \
+                    | gzip > /tmp/mindlink-$DATE.dump.gz
+                  echo "TODO: upload /tmp/mindlink-$DATE.dump.gz to OSS via coscmd/ossutil"
+              env:
+                - name: PGPASSWORD
+                  valueFrom: { secretKeyRef: { name: mindlink-api-secret, key: DB_PASSWORD } }
+              envFrom:
+                - configMapRef: { name: mindlink-api-config }
+                - secretRef:    { name: mindlink-api-secret }
+---
+# 每天 08:00 续约扫描 + 健康度刷新
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renewal-scan-daily
+  namespace: mindlink
+spec:
+  schedule: "0 0 * * *"     # UTC 00:00 = 北京 08:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: scan
+              image: curlimages/curl:8.10.1
+              command: ["sh", "-c"]
+              args:
+                - |
+                  curl -fsS -X POST -H "Authorization: Bearer $CRON_TOKEN" \
+                    http://mindlink-api/api/v1/renewals/scan-all
+              env:
+                - name: CRON_TOKEN
+                  valueFrom: { secretKeyRef: { name: mindlink-api-secret, key: JWT_SECRET } }
+---
+# 每天 09:00 推送月报到客户小程序
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: monthly-report-push
+  namespace: mindlink
+spec:
+  schedule: "0 1 1 * *"     # 每月 1 号 UTC 01:00 = 北京 09:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: push
+              image: curlimages/curl:8.10.1
+              command: ["sh", "-c"]
+              args:
+                - |
+                  curl -fsS -X POST -H "Authorization: Bearer $CRON_TOKEN" \
+                    http://mindlink-api/api/v1/reports/push-due
+              env:
+                - name: CRON_TOKEN
+                  valueFrom: { secretKeyRef: { name: mindlink-api-secret, key: JWT_SECRET } }

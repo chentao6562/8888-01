@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mindlink-api
+  namespace: mindlink
+  labels:
+    app: mindlink-api
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: mindlink-api
+  template:
+    metadata:
+      labels:
+        app: mindlink-api
+    spec:
+      containers:
+        - name: api
+          image: registry.example.com/mindlink/api:__IMAGE_TAG__
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: mindlink-api-config
+            - secretRef:
+                name: mindlink-api-secret
+          resources:
+            requests: { cpu: "200m", memory: "256Mi" }
+            limits:   { cpu: "1000m", memory: "1Gi" }
+          readinessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 5"]   # 优雅关闭：等 ingress 摘流
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mindlink-api
+  namespace: mindlink
+spec:
+  selector:
+    app: mindlink-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mindlink-api
+  namespace: mindlink
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mindlink-api
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: { type: Utilization, averageUtilization: 70 }

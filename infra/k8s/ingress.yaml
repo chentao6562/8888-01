@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mindlink-ingress
+  namespace: mindlink
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/limit-rps: "20"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [api.mindlink.example.com, app.mindlink.example.com]
+      secretName: mindlink-tls
+  rules:
+    - host: api.mindlink.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mindlink-api
+                port: { number: 80 }
+    - host: app.mindlink.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mindlink-admin-web
+                port: { number: 80 }

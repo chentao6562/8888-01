@@ -1,0 +1,30 @@
+{
+  "pages": [
+    { "path": "pages/index/index", "style": { "navigationBarTitleText": "MindLink" } },
+    { "path": "pages/login/login", "style": { "navigationBarTitleText": "登录" } },
+    { "path": "pages/home/home", "style": { "navigationBarTitleText": "MindLink" } },
+    { "path": "pages/videos/list", "style": { "navigationBarTitleText": "待我审" } },
+    { "path": "pages/videos/detail", "style": { "navigationBarTitleText": "视频审核" } },
+    { "path": "pages/reports/list", "style": { "navigationBarTitleText": "月度报告" } },
+    { "path": "pages/reports/detail", "style": { "navigationBarTitleText": "月报详情" } },
+    { "path": "pages/renewals/current", "style": { "navigationBarTitleText": "续约" } }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "MindLink",
+    "navigationBarBackgroundColor": "#0F1B3C",
+    "backgroundColor": "#F8FAFC"
+  },
+  "tabBar": {
+    "color": "#64748B",
+    "selectedColor": "#38BDF8",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "首页" },
+      { "pagePath": "pages/videos/list", "text": "待我审" },
+      { "pagePath": "pages/reports/list", "text": "月报" },
+      { "pagePath": "pages/renewals/current", "text": "续约" }
+    ]
+  }
+}

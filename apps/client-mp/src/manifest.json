@@ -1,0 +1,29 @@
+{
+  "name": "MindLink",
+  "appid": "__UNI__MINDLINK",
+  "description": "代运营协同系统 · 客户端",
+  "versionName": "0.0.0",
+  "versionCode": "1",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true
+  },
+  "h5": {
+    "router": {
+      "base": "/",
+      "mode": "history"
+    }
+  },
+  "mp-weixin": {
+    "appid": "wx-placeholder",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "permission": {}
+  },
+  "vueVersion": "3"
+}

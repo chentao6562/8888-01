@@ -1,0 +1,36 @@
+{
+  "name": "mindlink",
+  "version": "0.0.0",
+  "private": true,
+  "description": "MindLink 代运营协同系统 monorepo",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,vue,js,json,md}\"",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.4.1",
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,vue,js}": [
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}

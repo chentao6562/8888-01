@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.output
+.nuxt
+unpackage
+.turbo
+coverage
+pnpm-lock.yaml
+prd_text.txt
+prototype_extract
+MindLink_PRD_v1.docx
+files.zip
