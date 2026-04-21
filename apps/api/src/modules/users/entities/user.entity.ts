@@ -34,10 +34,10 @@ export class UserEntity {
   @Column({ name: 'failed_attempts', type: 'int', default: 0 })
   failedAttempts!: number;
 
-  @Column({ name: 'locked_until', type: 'datetime', nullable: true })
+  @Column({ name: 'locked_until', nullable: true })
   lockedUntil!: Date | null;
 
-  @Column({ name: 'last_login_at', type: 'datetime', nullable: true })
+  @Column({ name: 'last_login_at', nullable: true })
   lastLoginAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })

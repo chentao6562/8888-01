@@ -39,7 +39,7 @@ export class TenantEntity {
   @Column({ name: 'contact_email', type: 'varchar', length: 120, nullable: true })
   contactEmail!: string | null;
 
-  @Column({ name: 'expires_at', type: 'datetime', nullable: true })
+  @Column({ name: 'expires_at', nullable: true })
   expiresAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })

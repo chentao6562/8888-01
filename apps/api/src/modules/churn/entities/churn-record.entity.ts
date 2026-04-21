@@ -34,7 +34,7 @@ export class ChurnRecordEntity {
   @Column({ name: 'improvement_suggestion', type: 'text', nullable: true })
   improvementSuggestion!: string | null;
 
-  @Column({ name: 'churned_at', type: 'datetime' })
+  @Column({ name: 'churned_at' })
   churnedAt!: Date;
 
   @Column({ name: 'created_by', type: 'varchar', length: 36, nullable: true })

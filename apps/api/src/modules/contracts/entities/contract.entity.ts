@@ -53,7 +53,7 @@ export class ContractEntity {
   @Column({ name: 'variables_snapshot', type: 'text', nullable: true })
   variablesSnapshot!: string | null; // JSON
 
-  @Column({ name: 'signed_at', type: 'datetime', nullable: true })
+  @Column({ name: 'signed_at', nullable: true })
   signedAt!: Date | null;
 
   @Column({ name: 'esign_order_id', type: 'varchar', length: 120, nullable: true })
