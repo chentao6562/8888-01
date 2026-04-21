@@ -35,7 +35,7 @@ export class ComplaintEntity {
   @Column({ name: 'handled_by', type: 'varchar', length: 36, nullable: true })
   handledBy!: string | null;
 
-  @Column({ name: 'handled_at', nullable: true })
+  @Column({ name: 'handled_at', type: 'datetime', nullable: true })
   handledAt!: Date | null;
 
   @Column({ name: 'resolution', type: 'text', nullable: true })

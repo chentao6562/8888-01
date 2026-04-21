@@ -36,13 +36,13 @@ export class PaymentEntity {
   @Column({ type: 'int' })
   amount!: number;
 
-  @Column({ name: 'due_at', nullable: true })
+  @Column({ name: 'due_at', type: 'datetime', nullable: true })
   dueAt!: Date | null;
 
   @Column({ type: 'varchar', length: 20, default: 'pending' })
   status!: PaymentStatus;
 
-  @Column({ name: 'paid_at', nullable: true })
+  @Column({ name: 'paid_at', type: 'datetime', nullable: true })
   paidAt!: Date | null;
 
   @Column({ name: 'voucher_url', type: 'varchar', length: 500, nullable: true })

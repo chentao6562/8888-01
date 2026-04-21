@@ -48,10 +48,10 @@ export class TaskEntity {
   @Column({ type: 'varchar', length: 20, default: 'pending' })
   status!: TaskStatus;
 
-  @Column({ name: 'due_at', nullable: true })
+  @Column({ name: 'due_at', type: 'datetime', nullable: true })
   dueAt!: Date | null;
 
-  @Column({ name: 'completed_at', nullable: true })
+  @Column({ name: 'completed_at', type: 'datetime', nullable: true })
   completedAt!: Date | null;
 
   @Column({ name: 'escalated_level', type: 'int', default: 0 })

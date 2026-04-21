@@ -81,10 +81,10 @@ export class VideoEntity {
   tags!: string | null; // JSON string[]
 
   // 审核（phase 7 激活完整流）
-  @Column({ name: 'review_submitted_at', nullable: true })
+  @Column({ name: 'review_submitted_at', type: 'datetime', nullable: true })
   reviewSubmittedAt!: Date | null;
 
-  @Column({ name: 'reviewed_at', nullable: true })
+  @Column({ name: 'reviewed_at', type: 'datetime', nullable: true })
   reviewedAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })
