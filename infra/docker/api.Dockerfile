@@ -41,6 +41,8 @@ RUN sed -i 's|dl-cdn.alpinelinux.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apk/re
 COPY --from=builder --chown=mindlink:nodejs /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/package.json /app/.npmrc ./
 COPY --from=builder --chown=mindlink:nodejs /app/apps/api/package.json ./apps/api/
 COPY --from=builder --chown=mindlink:nodejs /app/packages ./packages
+# HUSKY=0 跳过 root package.json 的 prepare 脚本（husky 是 devDep · prod 不装）
+ENV HUSKY=0
 RUN pnpm install --frozen-lockfile --filter @mindlink/api... --prod \
  && pnpm store prune
 
