@@ -26,8 +26,11 @@ services:
       context: .
       dockerfile: infra/docker/admin-web.Dockerfile
       args:
-        VITE_API_BASE: http://39.104.101.12:3000/api/v1
+        # 相对路径 · 浏览器同源 · nginx 反代到 api 容器
+        VITE_API_BASE: /api/v1
     container_name: mindlink-web
+    depends_on:
+      - api
     restart: unless-stopped
     ports:
       - "80:80"
